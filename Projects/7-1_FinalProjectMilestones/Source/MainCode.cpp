@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 	g_SceneManager->PrepareScene();
 
 	// Calculate lightspace matrix for shaders
-	float near_plane = 0.0f, far_plane = 40.0f;
+	float near_plane = 0.0f, far_plane = 9.0f;
 
 	glm::mat4 lightProjection = glm::ortho(
 		-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
@@ -135,12 +135,20 @@ int main(int argc, char* argv[])
 	simpleDepthShader.use();
 	simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
+	// Clear the frame and z buffers
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	// Render to depth map
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	g_SceneManager->RenderSceneFromLight(simpleDepthShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// Clear the frame and z buffers
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Load scene textures, including depth map
 	g_ShaderManager->use();
