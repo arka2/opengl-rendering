@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "ViewManager.h"
+#include "ShaderManager.h"
 
 // GLM Math Header inclusions
 #include <glm/glm.hpp>
@@ -46,11 +47,9 @@ namespace
  *
  *  The constructor for the class
  ***********************************************************/
-ViewManager::ViewManager(
-	ShaderManager *pShaderManager)
+ViewManager::ViewManager()
 {
 	// initialize the member variables
-	m_pShaderManager = pShaderManager;
 	m_pWindow = NULL;
 	g_pCamera = new Camera();
 	// default camera view parameters
@@ -68,7 +67,7 @@ ViewManager::ViewManager(
 ViewManager::~ViewManager()
 {
 	// free up allocated memory
-	m_pShaderManager = NULL;
+	//m_pShaderManager = NULL;
 	m_pWindow = NULL;
 	if (NULL != g_pCamera)
 	{
@@ -253,7 +252,7 @@ void ViewManager::ProcessKeyboardEvents()
  *  the shapes, textures in memory to support the 3D scene 
  *  rendering
  ***********************************************************/
-void ViewManager::PrepareSceneView()
+void ViewManager::PrepareSceneView(const ShaderManager &shader)
 {
 	glm::mat4 view;
 	glm::mat4 projection;
@@ -297,16 +296,11 @@ void ViewManager::PrepareSceneView()
 		}
 	}
 
+	// set the view matrix into the shader for proper rendering
+	shader.setMat4Value(g_ViewName, view);
+	// set the view matrix into the shader for proper rendering
+	shader.setMat4Value(g_ProjectionName, projection);
+	// set the view position of the camera into the shader for proper rendering
+	shader.setVec3Value("viewPosition", g_pCamera->Position);
 	// if the shader manager object is valid
-	if (NULL != m_pShaderManager)
-	{
-		// set the view matrix into the shader for proper rendering
-		m_pShaderManager->setMat4Value(g_ViewName, view);
-		// set the view matrix into the shader for proper rendering
-		m_pShaderManager->setMat4Value(g_ProjectionName, projection);
-		// set the view position of the camera into the shader for proper rendering
-		m_pShaderManager->setVec3Value("viewPosition", g_pCamera->Position);
-
-		
-	}
 }

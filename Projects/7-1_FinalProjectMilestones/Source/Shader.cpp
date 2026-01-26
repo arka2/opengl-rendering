@@ -101,25 +101,25 @@ void Shader::use()
     glUseProgram(ID);
 }
 
-void Shader::setBool(const std::string& name, bool value) const
+void Shader::setBoolValue(const std::string& name, bool value) const
 {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
 }
-void Shader::setInt(const std::string& name, int value) const
+void Shader::setIntValue(const std::string& name, int value) const
 {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
-void Shader::setFloat(const std::string& name, float value) const
+void Shader::setFloatValue(const std::string& name, float value) const
 {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::setMat4(const std::string& name, glm::mat4 &mat) const
+void Shader::setMat4Value(const std::string& name, glm::mat4 &mat) const
 {
     glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
-void Shader::setSampler2D(const std::string& name, unsigned int& value) const
+void Shader::setSampler2DValue(const std::string& name, unsigned int& value) const
 {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }

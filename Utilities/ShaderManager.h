@@ -1,3 +1,5 @@
+#ifndef SHADERMANAGER_H
+#define SHADERMANAGER_H
 #pragma once
 
 #include <GL/glew.h>        // GLEW library
@@ -15,7 +17,8 @@ class ShaderManager
 {
 public:
 	unsigned int m_programID;
-	
+	ShaderManager(const char* vertexPath, const char* fragmentPath);
+
 	GLuint LoadShaders(
 		const char* vertex_file_path, 
 		const char* fragment_file_path);
@@ -101,3 +104,4 @@ public:
 		glUniform1i(glGetUniformLocation(m_programID, name.c_str()), value);
 	}
 };
+#endif

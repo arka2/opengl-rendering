@@ -33,7 +33,7 @@ class SceneManager
 {
 public:
 	// constructor
-	SceneManager(ShaderManager* pShaderManager);
+	SceneManager();
 	// destructor
 	~SceneManager();
 
@@ -63,8 +63,6 @@ public:
 	};
 
 private:
-	// pointer to shader manager object
-	ShaderManager* m_pShaderManager;
 	// pointer to basic shapes object
 	ShapeMeshes* m_basicMeshes;
 	// Added -- pointer to half cylinder object
@@ -97,7 +95,7 @@ private:
 	// Configure material settings
 	void DefineObjectMaterials();
 
-	void SetupSceneLights();
+	void SetupSceneLights(const ShaderManager &shader);
 
 	// set the transformation values 
 	// into the transform buffer
@@ -106,56 +104,31 @@ private:
 		float XrotationDegrees,
 		float YrotationDegrees,
 		float ZrotationDegrees,
-		glm::vec3 positionXYZ);
-
-	// set the color values into the shader
-	void SetShaderColor(
-		float redColorValue,
-		float greenColorValue,
-		float blueColorValue,
-		float alphaValue);
-
+		glm::vec3 positionXYZ,
+		const ShaderManager &shader);
 	// set the texture data into the shader
 	void SetShaderTexture(
-		std::string textureTag);
+		std::string textureTag, const ShaderManager &shader);
 
-	void SetDepthMapTexture();
-
-	// set the UV scale for the texture mapping
-	void SetTextureUVScale(
-		float u, float v);
-
-	// set the object material into the shader
-	void SetShaderMaterial(
-		std::string materialTag);
+	void SetDepthMapTexture(const ShaderManager &shader);
 
 public:
 
 	// The following methods are for the students to 
 	// customize for their own 3D scene
-	void PrepareScene();
-	void RenderScene();
+	void PrepareScene(const ShaderManager &shader);
+	void RenderScene(const ShaderManager &mainShader, const ShaderManager &depthShader);
 
 	// methods for rendering the various objects in the 3D scene
-	void RenderTable();
-	void RenderAlbum();
-	void RenderPuzzleBox();
-	void RenderBackdrop();
-	void RenderBottle();
+	void RenderTable(const ShaderManager& mainShader, const ShaderManager &depthShader);
+	void RenderPuzzleBox(const ShaderManager& mainShader, const ShaderManager &depthShader);
 
 	// methods for rendering shadows
-	void RenderSceneFromLight(const Shader& shader);
-	void SetTransformationsForLight(glm::vec3 scaleXYZ,
-		float XrotationDegrees,
-		float YrotationDegrees,
-		float ZrotationDegrees,
-		glm::vec3 positionXYZ,
-		const Shader& shader);
 	void renderQuad();
 	void LoadDepthMapTexture(unsigned int &depthmap);
 	int FindTextureSlot(std::string tag);
 	unsigned int GetDepthMapSlot();
 
-	void LoadSceneTextures(unsigned int &depthmap);
+	void LoadSceneTextures(unsigned int &depthmap, const ShaderManager &shader);
 
 };

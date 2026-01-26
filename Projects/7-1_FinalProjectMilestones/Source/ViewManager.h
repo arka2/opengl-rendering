@@ -19,8 +19,7 @@ class ViewManager
 {
 public:
 	// constructor
-	ViewManager(
-		ShaderManager* pShaderManager);
+	ViewManager();
 	// destructor
 	~ViewManager();
 
@@ -31,8 +30,6 @@ public:
 	static void Mouse_Scroll_Callback(GLFWwindow* window, double xOffset, double yOffset);
 
 private:
-	// pointer to shader manager object
-	ShaderManager* m_pShaderManager;
 	// active OpenGL display window
 	GLFWwindow* m_pWindow;
 
@@ -44,5 +41,5 @@ public:
 	GLFWwindow* CreateDisplayWindow(const char* windowTitle);
 	
 	// prepare the conversion from 3D object display to 2D scene display
-	void PrepareSceneView();
+	void PrepareSceneView(const ShaderManager &shader);
 };
