@@ -37,6 +37,7 @@ uniform vec3 viewPosition;
 uniform vec2 UVscale = vec2(1.0f, 1.0f);
 uniform LightSource lightSources[TOTAL_LIGHTS];
 uniform Material material;
+uniform bool blinn;
 
 // function prototypes
 vec3 CalcLightSource(LightSource light, vec3 lightNormal, vec3 vertexPosition, vec3 viewDirection);
@@ -94,6 +95,9 @@ vec3 CalcLightSource(LightSource light, vec3 lightNormal, vec3 vertexPosition, v
 
    // Calculate distance (light direction) between light source and fragments/pixels
    vec3 lightDirection = normalize(light.position - vertexPosition); 
+
+   vec3 halfwayDir = normalize(lightDirection + viewDirection);
+
    // Calculate diffuse impact by generating dot product of normal and light
    float impact = max(dot(lightNormal, lightDirection), 0.0);
    // Generate diffuse material color   
@@ -104,13 +108,26 @@ vec3 CalcLightSource(LightSource light, vec3 lightNormal, vec3 vertexPosition, v
    // Calculate reflection vector
    vec3 reflectDir = reflect(-lightDirection, lightNormal);
    // Calculate specular component
-   float specularComponent = pow(max(dot(viewDirection, reflectDir), 0.0), 32.0); //light.focalStrength);
-   specular = (light.specularIntensity * material.shininess) * specularComponent * material.specularColor;
+   //float specularComponent = pow(max(dot(viewDirection, reflectDir), 0.0), 32.0);
+   float specularComponent = 0.0;
+   
+   
   
-   // calculate shadow
-   float shadow = CalcShadow(fragmentPosLightSpace);
+   if (blinn)
+   {
+      specularComponent = pow(max(dot(lightNormal, halfwayDir), 0.0), 16.0);
+      specular = (light.specularIntensity * material.shininess) * specularComponent * material.specularColor;
+   }
+   else
+   {
+      float specularComponent = pow(max(dot(viewDirection, reflectDir), 0.0), 32.0);
+      //specular = (light.specularIntensity * material.shininess) * specularComponent * material.specularColor;
+   }
 
-   return(ambient + (1.0 - shadow) * (diffuse + specular));
+   // calculate shadow
+   //float shadow = CalcShadow(fragmentPosLightSpace);
+
+   return(ambient + diffuse + specular);
 }
 
 float CalcShadow(vec4 fragPosLightSpace)

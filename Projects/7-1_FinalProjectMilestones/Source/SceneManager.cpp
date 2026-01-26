@@ -412,12 +412,12 @@ void SceneManager::SetupSceneLights()
 	m_pShaderManager->setFloatValue("lightSources[0].specularIntensity", 0.1f);
 
 	// FIXME: Changed -- Commented out ambient light while debugging shadow mapping
-	//m_pShaderManager->setVec3Value("lightSources[1].position", 6.0f, 8.0f, 20.0f);
-	//m_pShaderManager->setVec3Value("lightSources[1].ambientColor", 0.01f, 0.01f, 0.01f);
-	//m_pShaderManager->setVec3Value("lightSources[1].diffuseColor", 0.37890625f, 0.41796875f, 1.0f);
-	//m_pShaderManager->setVec3Value("lightSources[1].specularColor", 0.37890625f, 0.41796875f, 1.0f);
-	//m_pShaderManager->setFloatValue("lightSources[1].focalStrength", 32.0f);
-	//m_pShaderManager->setFloatValue("lightSources[1].specularIntensity", 0.2f);
+	m_pShaderManager->setVec3Value("lightSources[1].position", 6.0f, 8.0f, 20.0f);
+	m_pShaderManager->setVec3Value("lightSources[1].ambientColor", 0.01f, 0.01f, 0.01f);
+	m_pShaderManager->setVec3Value("lightSources[1].diffuseColor", 0.37890625f, 0.41796875f, 1.0f);
+	m_pShaderManager->setVec3Value("lightSources[1].specularColor", 0.37890625f, 0.41796875f, 1.0f);
+	m_pShaderManager->setFloatValue("lightSources[1].focalStrength", 32.0f);
+	m_pShaderManager->setFloatValue("lightSources[1].specularIntensity", 0.2f);
 }
 
 /***********************************************************
@@ -1239,6 +1239,8 @@ void SceneManager::RenderSceneFromLight(const Shader &shader) {
 
 	// draw the mesh with transformation values
 	m_basicMeshes->DrawPlaneMesh();
+
+	
 
 	// Add vector to position of each mesh to move entire object same amount
 	glm::vec3 photoAlbumPositionXYZ = glm::vec3(-5.0f, 0.0975f, -3.0f);
