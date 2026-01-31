@@ -33,7 +33,7 @@ class SceneManager
 {
 public:
 	// constructor
-	SceneManager(ShaderManager* pShaderManager);
+	SceneManager(ShaderManager* pShaderManager, ShaderManager* pDepthShaderManager);
 	// destructor
 	~SceneManager();
 
@@ -65,6 +65,7 @@ public:
 private:
 	// pointer to shader manager object
 	ShaderManager* m_pShaderManager;
+	ShaderManager* m_pDepthShaderManager;
 	// pointer to basic shapes object
 	ShapeMeshes* m_basicMeshes;
 	// Added -- pointer to half cylinder object
@@ -106,7 +107,8 @@ private:
 		float XrotationDegrees,
 		float YrotationDegrees,
 		float ZrotationDegrees,
-		glm::vec3 positionXYZ);
+		glm::vec3 positionXYZ,
+		std::string shaderName);
 
 	// set the color values into the shader
 	void SetShaderColor(
@@ -134,28 +136,20 @@ public:
 	// The following methods are for the students to 
 	// customize for their own 3D scene
 	void PrepareScene();
-	void RenderScene();
+	void RenderScene(std::string shaderName);
 
 	// methods for rendering the various objects in the 3D scene
-	void RenderTable();
-	void RenderAlbum();
-	void RenderPuzzleBox();
-	void RenderBackdrop();
-	void RenderBottle();
+	void RenderTable(std::string shaderName);
+	void RenderAlbum(std::string shaderName);
+	void RenderPuzzleBox(std::string shaderName);
+	void RenderBackdrop(std::string shaderName);
+	void RenderBottle(std::string shaderName);
 
-	// methods for rendering shadows
-	void RenderSceneFromLight(const Shader& shader);
-	void SetTransformationsForLight(glm::vec3 scaleXYZ,
-		float XrotationDegrees,
-		float YrotationDegrees,
-		float ZrotationDegrees,
-		glm::vec3 positionXYZ,
-		const Shader& shader);
+	// methods for rendering shadows and setting depthMap
 	void renderQuad();
 	void LoadDepthMapTexture(unsigned int &depthmap);
 	int FindTextureSlot(std::string tag);
 	unsigned int GetDepthMapSlot();
-
 	void LoadSceneTextures(unsigned int &depthmap);
 
 };

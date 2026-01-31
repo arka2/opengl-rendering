@@ -33,9 +33,10 @@ namespace
  *
  *  The constructor for the class
  ***********************************************************/
-SceneManager::SceneManager(ShaderManager *pShaderManager)
+SceneManager::SceneManager(ShaderManager *pShaderManager, ShaderManager* pDepthShaderManager)
 {
 	m_pShaderManager = pShaderManager;
+	m_pDepthShaderManager = pDepthShaderManager;
 	m_basicMeshes = new ShapeMeshes();
 	// Added for using half cylinder without editing ShapeMeshes
 	m_halfCylinder = new HalfCylinder();
@@ -53,6 +54,7 @@ SceneManager::SceneManager(ShaderManager *pShaderManager)
 SceneManager::~SceneManager()
 {
 	m_pShaderManager = NULL;
+	m_pDepthShaderManager = NULL;
 	delete m_basicMeshes;
 	m_basicMeshes = NULL;
 	// Added for using half cylinder without editing ShapeMeshes
@@ -404,7 +406,7 @@ void SceneManager::SetupSceneLights()
 	// lighting then comment out the following line
 	m_pShaderManager->setBoolValue(g_UseLightingName, true);
 
-	m_pShaderManager->setVec3Value("lightSources[0].position", -10.0f, 4.0f, 0.0f);
+	m_pShaderManager->setVec3Value("lightSources[0].position", -10.0f, 4.0f, 2.0f);
 	m_pShaderManager->setVec3Value("lightSources[0].ambientColor", 0.4296875f, 0.55859375f, 0.6484375f);
 	m_pShaderManager->setVec3Value("lightSources[0].diffuseColor", 1.0f, 0.83203125f, 0.1484375f);
 	m_pShaderManager->setVec3Value("lightSources[0].specularColor", 1.0f, 0.83203125f, 0.1484375f);
@@ -431,7 +433,8 @@ void SceneManager::SetTransformations(
 	float XrotationDegrees,
 	float YrotationDegrees,
 	float ZrotationDegrees,
-	glm::vec3 positionXYZ)
+	glm::vec3 positionXYZ,
+	std::string shaderName)
 {
 	// variables for this method
 	glm::mat4 modelView;
@@ -452,9 +455,17 @@ void SceneManager::SetTransformations(
 
 	modelView = translation * rotationX * rotationY * rotationZ * scale;
 
-	if (NULL != m_pShaderManager)
-	{
-		m_pShaderManager->setMat4Value(g_ModelName, modelView);
+	if (shaderName == "depthMap") {
+		if (NULL != m_pDepthShaderManager)
+		{
+			m_pDepthShaderManager->setMat4Value(g_ModelName, modelView);
+		}
+	}
+	else {
+		if (NULL != m_pShaderManager)
+		{
+			m_pShaderManager->setMat4Value(g_ModelName, modelView);
+		}
 	}
 }
 
@@ -600,14 +611,14 @@ void SceneManager::PrepareScene()
  *  This method is used for rendering the 3D scene by
  *  transforming and drawing the basic 3D shapes
  ***********************************************************/
-void SceneManager::RenderScene()
+void SceneManager::RenderScene(std::string shaderName)
 {
 	// Call functions to render each object
-	RenderTable();
-	RenderAlbum();
-	RenderPuzzleBox();
-	RenderBackdrop();
-	RenderBottle();
+	RenderTable(shaderName);
+	RenderAlbum(shaderName);
+	RenderPuzzleBox(shaderName);
+	RenderBackdrop(shaderName);
+	RenderBottle(shaderName);
 }
 
 /***********************************************************
@@ -616,7 +627,7 @@ void SceneManager::RenderScene()
  *  This method is called to render the shapes for the table
  *  object.
  ***********************************************************/
-void SceneManager::RenderTable()
+void SceneManager::RenderTable(std::string shaderName)
 {
 	// declare the variables for the transformations
 	glm::vec3 scaleXYZ;
@@ -642,7 +653,8 @@ void SceneManager::RenderTable()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	SetShaderColor(1, 1, 1, 1);
 	SetTextureUVScale(3.0, 3.0);
@@ -659,7 +671,7 @@ void SceneManager::RenderTable()
  *  This method is called to render the shapes for the photo
  *  album object.
  ***********************************************************/
-void SceneManager::RenderAlbum()
+void SceneManager::RenderAlbum(std::string shaderName)
 {
 	// FIXME: move album render code here
 	// declare the variables for the transformations
@@ -695,7 +707,8 @@ void SceneManager::RenderAlbum()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Red
@@ -731,7 +744,8 @@ void SceneManager::RenderAlbum()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Orange
@@ -766,7 +780,8 @@ void SceneManager::RenderAlbum()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Pink
@@ -799,7 +814,8 @@ void SceneManager::RenderAlbum()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Pink
@@ -835,7 +851,8 @@ void SceneManager::RenderAlbum()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Green
@@ -871,7 +888,8 @@ void SceneManager::RenderAlbum()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Blue
@@ -907,7 +925,8 @@ void SceneManager::RenderAlbum()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Medium grey
@@ -926,7 +945,7 @@ void SceneManager::RenderAlbum()
  *  This method is called to render the shapes for the puzzle
  *  box object.
  ***********************************************************/
-void SceneManager::RenderPuzzleBox()
+void SceneManager::RenderPuzzleBox(std::string shaderName)
 {
 	// declare the variables for the transformations
 	glm::vec3 scaleXYZ;
@@ -960,7 +979,8 @@ void SceneManager::RenderPuzzleBox()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Medium grey
@@ -993,7 +1013,8 @@ void SceneManager::RenderPuzzleBox()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Medium grey
@@ -1012,7 +1033,7 @@ void SceneManager::RenderPuzzleBox()
  *  This method is called to render the shapes for the backdrop
  *  object.
  ***********************************************************/
-void SceneManager::RenderBackdrop()
+void SceneManager::RenderBackdrop(std::string shaderName)
 {
 	// declare the variables for the transformations
 	glm::vec3 scaleXYZ;
@@ -1038,7 +1059,8 @@ void SceneManager::RenderBackdrop()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	SetShaderColor(1, 1, 1, 1);
 	SetTextureUVScale(3.0, 1.0);
@@ -1055,7 +1077,7 @@ void SceneManager::RenderBackdrop()
  *  This method is called to render the shapes for the glass
  *  bottle object.
  ***********************************************************/
-void SceneManager::RenderBottle()
+void SceneManager::RenderBottle(std::string shaderName)
 {
 	// declare the variables for the transformations
 	glm::vec3 scaleXYZ;
@@ -1094,7 +1116,8 @@ void SceneManager::RenderBottle()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Medium grey
@@ -1128,7 +1151,8 @@ void SceneManager::RenderBottle()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Medium grey
@@ -1162,7 +1186,8 @@ void SceneManager::RenderBottle()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Medium grey
@@ -1196,7 +1221,8 @@ void SceneManager::RenderBottle()
 		XrotationDegrees,
 		YrotationDegrees,
 		ZrotationDegrees,
-		positionXYZ);
+		positionXYZ,
+		shaderName);
 
 	// Set shader color
 	// Medium grey
@@ -1207,487 +1233,6 @@ void SceneManager::RenderBottle()
 
 	// draw the mesh with transformation values
 	m_basicMeshes->DrawTaperedCylinderMesh();
-}
-
-void SceneManager::RenderSceneFromLight(const Shader &shader) {
-	// declare the variables for the transformations
-	glm::vec3 scaleXYZ;
-	float XrotationDegrees = 0.0f;
-	float YrotationDegrees = 0.0f;
-	float ZrotationDegrees = 0.0f;
-	glm::vec3 positionXYZ;
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(20.0f, 1.0f, 10.0f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = 0.0f;
-	ZrotationDegrees = 0.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, 0.0f, 3.0f);
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawPlaneMesh();
-
-	
-
-	// Add vector to position of each mesh to move entire object same amount
-	glm::vec3 photoAlbumPositionXYZ = glm::vec3(-5.0f, 0.0975f, -3.0f);
-
-	/****************************************************************/
-	// Half cylinder -- outside of spine
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(0.6f, 5.45f, 0.3f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = 75.0f;
-	ZrotationDegrees = 90.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, 0.6f, 0.0f);
-	// add object position to mesh position
-	positionXYZ += photoAlbumPositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_halfCylinder->DrawHalfCylinderMesh(false, false, true);
-	/****************************************************************/
-
-	/****************************************************************/
-	// Half cylinder -- inside of spine
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(0.55f, 5.45f, 0.3f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = 75.0f;
-	ZrotationDegrees = 90.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.1f, 0.6f, 0.0f);
-	// add object position to mesh position
-	positionXYZ += photoAlbumPositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_halfCylinder->DrawHalfCylinderMesh(false, false, true);
-	/****************************************************************/
-
-	/****************************************************************/
-	// Torus -- bottom of spine
-	/****************************************************************/
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(0.55f, 0.25f, 0.3f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = -15.0f;
-	ZrotationDegrees = 90.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(-1.4f, 0.55f, 5.25f);
-	// add object position to mesh position
-	positionXYZ += photoAlbumPositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawHalfTorusMesh();
-	/****************************************************************/
-
-	/****************************************************************/
-	// Torus -- top of spine
-	/****************************************************************/
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = -15.0f;
-	ZrotationDegrees = 90.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.05f, 0.55f, 0.0f);
-	// add object position to mesh position
-	positionXYZ += photoAlbumPositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawHalfTorusMesh();
-	/****************************************************************/
-
-	/****************************************************************/
-	// Box -- bottom cover
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(5.5f, 0.195f, 5.55f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = -15.0f;
-	ZrotationDegrees = 0.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(1.95f, 0.0f, 3.33f);
-	// add object position to mesh position
-	positionXYZ += photoAlbumPositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawBoxMesh();
-	/****************************************************************/
-
-	/****************************************************************/
-	// Box -- top cover
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(5.5f, 0.195f, 5.55f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = -15.0f;
-	ZrotationDegrees = -2.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(1.95f, 1.0f, 3.33f);
-	// add object position to mesh position
-	positionXYZ += photoAlbumPositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_boxAlbumTextures->DrawBoxMesh();
-	/****************************************************************/
-
-	/****************************************************************/
-	// Box -- pages
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(5.3f, 0.8f, 5.3f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = -15.0f;
-	ZrotationDegrees = 0.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(1.86f, 0.5f, 3.29f);
-	// add object position to mesh position
-	positionXYZ += photoAlbumPositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawBoxMesh();
-
-	// Add vector to position of each mesh to move entire object same amount
-	glm::vec3 puzzleBoxPositionXYZ = glm::vec3(1.5f, 0.0f, 6.0f);
-	/****************************************************************/
-	// Box -- lower section
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(5.0f, 0.3f, 5.0f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = 24.0f;
-	ZrotationDegrees = 0.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, 0.15f, 0.0f);
-	// add object position to mesh position
-	positionXYZ += puzzleBoxPositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawBoxMesh();
-
-	/****************************************************************/
-	// Box -- upper section
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(5.1f, 1.3f, 5.1f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = 24.0f;
-	ZrotationDegrees = 0.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, 0.8f, 0.0f);
-	// add object position to mesh position
-	positionXYZ += puzzleBoxPositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_boxPuzzleTextures->DrawBoxMesh();
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(20.0f, 1.0f, 5.0f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 90.0f;
-	YrotationDegrees = 0.0f;
-	ZrotationDegrees = 0.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, 5.0f, -7.0f);
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawPlaneMesh();
-
-	// Add vector to position of each mesh to move entire object same amount
-	glm::vec3 bottlePositionXYZ = glm::vec3(0.0f, 1.15f, 5.2f);
-
-	/****************************************************************/
-	// Glass bottle
-	/****************************************************************/
-
-	/****************************************************************/
-	// Sphere -- body
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(0.9f, 0.9f, 0.9f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = 0.0f;
-	ZrotationDegrees = 0.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, 1.2f, 0.0f);
-	// add object position to mesh position
-	positionXYZ += bottlePositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawSphereMesh();
-	/****************************************************************/
-
-	/****************************************************************/
-	// Cylinder -- neck
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(0.27f, 0.6f, 0.27f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 0.0f;
-	YrotationDegrees = 0.0f;
-	ZrotationDegrees = 0.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, 2.0f, 0.0f);
-	// add object position to mesh position
-	positionXYZ += bottlePositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawCylinderMesh(false, false, true);
-	/****************************************************************/
-
-	/****************************************************************/
-	// Torus -- lip
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(0.27f, 0.27f, 0.27f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 90.0f;
-	YrotationDegrees = 0.0f;
-	ZrotationDegrees = 0.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.0f, 2.6f, 0.0f);
-	// add object position to mesh position
-	positionXYZ += bottlePositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawTorusMesh();
-	/****************************************************************/
-
-	/****************************************************************/
-	// Tapered cylinder -- cork
-	/****************************************************************/
-
-	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(0.29f, 0.405f, 0.29f);
-
-	// set the XYZ rotation for the mesh
-	XrotationDegrees = 190.0f;
-	YrotationDegrees = 0.0f;
-	ZrotationDegrees = 6.0f;
-
-	// set the XYZ position for the mesh
-	positionXYZ = glm::vec3(0.01f, 2.8f, 0.0f);
-	// add object position to mesh position
-	positionXYZ += bottlePositionXYZ;
-
-	// set the transformations into memory to be used on the drawn meshes
-	SetTransformationsForLight(
-		scaleXYZ,
-		XrotationDegrees,
-		YrotationDegrees,
-		ZrotationDegrees,
-		positionXYZ,
-		shader);
-
-	// draw the mesh with transformation values
-	m_basicMeshes->DrawTaperedCylinderMesh();
-}
-
-void SceneManager::SetTransformationsForLight(
-	glm::vec3 scaleXYZ,
-	float XrotationDegrees,
-	float YrotationDegrees,
-	float ZrotationDegrees,
-	glm::vec3 positionXYZ,
-	const Shader &shader)
-{
-	// variables for this method
-	glm::mat4 modelView;
-	glm::mat4 scale;
-	glm::mat4 rotationX;
-	glm::mat4 rotationY;
-	glm::mat4 rotationZ;
-	glm::mat4 translation;
-
-	// set the scale value in the transform buffer
-	scale = glm::scale(scaleXYZ);
-	// set the rotation values in the transform buffer
-	rotationX = glm::rotate(glm::radians(XrotationDegrees), glm::vec3(1.0f, 0.0f, 0.0f));
-	rotationY = glm::rotate(glm::radians(YrotationDegrees), glm::vec3(0.0f, 1.0f, 0.0f));
-	rotationZ = glm::rotate(glm::radians(ZrotationDegrees), glm::vec3(0.0f, 0.0f, 1.0f));
-	// set the translation value in the transform buffer
-	translation = glm::translate(positionXYZ);
-
-	modelView = translation * rotationX * rotationY * rotationZ * scale;
-
-	shader.setMat4(g_ModelName, modelView);
 }
 
 // renderQuad() renders a 1x1 XY quad in NDC

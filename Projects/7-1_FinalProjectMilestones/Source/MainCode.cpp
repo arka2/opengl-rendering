@@ -27,6 +27,7 @@ namespace
 	SceneManager* g_SceneManager = nullptr;
 	// shader manager object for dynamic interaction with the shader code
 	ShaderManager* g_ShaderManager = nullptr;
+	ShaderManager* g_DepthShaderManager = nullptr;
 	// view manager object for managing the 3D view setup and projection to 2D
 	ViewManager* g_ViewManager = nullptr;
 }
@@ -53,6 +54,7 @@ int main(int argc, char* argv[])
 
 	// try to create a new shader manager object
 	g_ShaderManager = new ShaderManager();
+	g_DepthShaderManager = new ShaderManager();
 	// try to create a new view manager object
 	g_ViewManager = new ViewManager(
 		g_ShaderManager);
@@ -110,11 +112,15 @@ int main(int argc, char* argv[])
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Load shaders for depth map and debugging
-	Shader simpleDepthShader("Source/shaders/depthVertexShader.glsl", "Source/shaders/depthFragShader.glsl");
-	Shader debugDepthQuad("Source/shaders/debugQuadVertexShader.glsl", "Source/shaders/debugQuadFragShader.glsl");
+	//Shader simpleDepthShader("Source/shaders/depthVertexShader.glsl", "Source/shaders/depthFragShader.glsl");
+	//Shader debugDepthQuad("Source/shaders/debugQuadVertexShader.glsl", "Source/shaders/debugQuadFragShader.glsl");
+
+	g_DepthShaderManager->LoadShaders(
+		"Source/shaders/depthVertexShader.glsl",
+		"Source/shaders/depthFragShader.glsl");
 
 	// try to create a new scene manager object and prepare the 3D scene
-	g_SceneManager = new SceneManager(g_ShaderManager);
+	g_SceneManager = new SceneManager(g_ShaderManager, g_DepthShaderManager);
 	g_SceneManager->PrepareScene();
 
 	// Calculate lightspace matrix for shaders
@@ -124,7 +130,7 @@ int main(int argc, char* argv[])
 		-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 
 	glm::mat4 lightView = glm::lookAt(
-		glm::vec3(-10.0f, 4.0f, 0.0f),
+		glm::vec3(-10.0f, 4.0f, 2.0f),
 		glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -134,8 +140,8 @@ int main(int argc, char* argv[])
 	g_ShaderManager->use();
 	g_ShaderManager->setMat4Value("lightSpaceMatrix", lightSpaceMatrix);
 
-	simpleDepthShader.use();
-	simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+	g_DepthShaderManager->use();
+	g_DepthShaderManager->setMat4Value("lightSpaceMatrix", lightSpaceMatrix);
 
 	// Clear the frame and z buffers
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -146,7 +152,8 @@ int main(int argc, char* argv[])
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	g_SceneManager->RenderSceneFromLight(simpleDepthShader);
+	g_SceneManager->RenderScene("depthMap");
+	//g_SceneManager->RenderSceneFromLight(simpleDepthShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Clear the frame and z buffers
@@ -156,14 +163,8 @@ int main(int argc, char* argv[])
 	// Load scene textures, including depth map
 	g_ShaderManager->use();
 	g_SceneManager->LoadSceneTextures(depthMap);
-	// FIXME: Try to assign depth map to main shader -- DOESN'T DO ANYTHING
 	unsigned int depthMapID = g_SceneManager->GetDepthMapSlot();
 	g_ShaderManager->setSampler2DValue("depthMap", depthMapID);
-
-	// Uncomment this when using tutorial shader
-	//g_ShaderManager->setSampler2DValue("shadowMap", depthMapID);
-	//int textureID = g_SceneManager->FindTextureSlot("puzzle");
-	//g_ShaderManager->setSampler2DValue("diffuseTexture", textureID);
 
 	// loop will keep running until the application is closed 
 	// or until an error has occurred
@@ -179,13 +180,13 @@ int main(int argc, char* argv[])
 
 		// refresh the 3D scene
 		g_ShaderManager->use();
-		g_SceneManager->RenderScene();
+		g_SceneManager->RenderScene("main");
 
 		// render Depth map to quad for visual debugging
 		// ---------------------------------------------
 		//debugDepthQuad.use();
-		//debugDepthQuad.setFloat("near_plane", near_plane);
-		//debugDepthQuad.setFloat("far_plane", far_plane);
+		//debugDepthQuad.setFloatValue("near_plane", near_plane);
+		//debugDepthQuad.setFloatValue("far_plane", far_plane);
 		//debugDepthQuad.setSampler2D("depthMap", depthMapID);
 		//g_SceneManager->renderQuad();
 
@@ -211,6 +212,11 @@ int main(int argc, char* argv[])
 	{
 		delete g_ShaderManager;
 		g_ShaderManager = NULL;
+	}
+	if (NULL != g_DepthShaderManager)
+	{
+		delete g_DepthShaderManager;
+		g_DepthShaderManager = NULL;
 	}
 
 	// Terminates the program successfully

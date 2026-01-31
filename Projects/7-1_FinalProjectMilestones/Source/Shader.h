@@ -21,9 +21,10 @@ public:
     // use/activate the shader
     void use();
     // utility uniform functions
-    void setBool(const std::string& name, bool value) const;
-    void setInt(const std::string& name, int value) const;
-    void setFloat(const std::string& name, float value) const;
+    void setBoolValue(const std::string& name, bool value) const;
+    void setIntValue(const std::string& name, int value) const;
+    void setFloatValue(const std::string& name, float value) const;
+    void setVec2Value(const std::string& name, glm::vec2& value) const;
     void setMat4(const std::string& name, glm::mat4 &mat) const;
     void setSampler2D(const std::string& name, unsigned int& value) const;
 };
