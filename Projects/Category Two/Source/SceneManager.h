@@ -12,16 +12,9 @@
 
 #include "ShaderManager.h"
 #include "ShapeMeshes.h"
-// Added to include half cylinder mesh without editing ShapeMeshes.h and ShapeMeshes.cpp
-#include "HalfCylinder.h"
-// Added to allow use of multiple textures on different faces of a box
-#include "BoxAlbumTextures.h"
-#include "BoxPuzzleTextures.h"
 
 #include <string>
 #include <vector>
-
-#include "Shader.h"
 
 /***********************************************************
  *  SceneManager
@@ -68,12 +61,6 @@ private:
 	ShaderManager* m_pDepthShaderManager;
 	// pointer to basic shapes object
 	ShapeMeshes* m_basicMeshes;
-	// Added -- pointer to half cylinder object
-	HalfCylinder* m_halfCylinder;
-	// Added -- pointer to box object with multiple textures
-	BoxAlbumTextures* m_boxAlbumTextures;
-	// Added -- pointer to box object with puzzle textures
-	BoxPuzzleTextures* m_boxPuzzleTextures;
 	// total number of loaded textures
 	int m_loadedTextures;
 	// loaded textures info

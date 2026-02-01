@@ -30,42 +30,12 @@
     <ClCompile Include="Source\ViewManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\HalfCylinder.cpp">
-      <Filter>Source Files\3D Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BoxAlbumTextures.cpp">
-      <Filter>Source Files\3D Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BoxPuzzleTextures.cpp">
-      <Filter>Source Files\3D Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="shadow_map_fbo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\SceneManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\ViewManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\HalfCylinder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BoxAlbumTextures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BoxPuzzleTextures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="shadow_map_fbo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

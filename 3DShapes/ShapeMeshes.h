@@ -39,6 +39,8 @@ private:
 
 	// the available 3D shapes
 	GLMesh m_BoxMesh;
+	GLMesh m_AlbumBoxMesh;
+	GLMesh m_PuzzleBoxMesh;
 	GLMesh m_ConeMesh;
 	GLMesh m_CylinderMesh;
 	GLMesh m_PlaneMesh;
@@ -55,6 +57,8 @@ public:
 	// methods for loading the shape mesh data 
 	// into memory
 	void LoadBoxMesh();
+	void LoadAlbumBoxMesh();
+	void LoadPuzzleBoxMesh();
 	void LoadConeMesh();
 	void LoadCylinderMesh();
 	void LoadPlaneMesh();
@@ -68,12 +72,15 @@ public:
 	// methods for drawing the shape mesh in the
 	// display window
 	void DrawBoxMesh();
+	void DrawAlbumBoxMesh();
+	void DrawPuzzleBoxMesh();
 	void DrawConeMesh(
 		bool bDrawBottom=true);
 	void DrawCylinderMesh(
 		bool bDrawTop=true,
 		bool bDrawBottom=true,
-		bool bDrawSides = true);
+		bool bDrawSides = true,
+		bool bDrawHalf = false);
 	void DrawPlaneMesh();
 	void DrawPrismMesh();
 	void DrawPyramid3Mesh();

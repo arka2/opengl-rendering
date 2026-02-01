@@ -18,7 +18,7 @@
 namespace
 {
 	// Macro for window title
-	const char* const WINDOW_TITLE = "7-1 FinalProject and Milestones"; 
+	const char* const WINDOW_TITLE = "SNHU CS-499 Capstone -- Category Two"; 
 
 	// Main GLFW window
 	GLFWwindow* g_Window = nullptr;
@@ -70,18 +70,9 @@ int main(int argc, char* argv[])
 
 	// load the shader code from the external GLSL files
 	g_ShaderManager->LoadShaders(
-		"../../Utilities/shaders/vertexShader.glsl",
-		// "../../Utilities/shaders/fragmentShader.glsl");
-		// Comment out above line and uncomment below line (and vice versa) to use other frag shader
-		"Source/fragShader.glsl");
+		"Source/shaders/vertexShader.glsl",
+		"Source/shaders/fragShader.glsl");
 
-	// Attempt at trying to use the working shaders from OpenGL tutorial
-	// needs to have shadowMap and diffuseTexture set in while loop
-	//g_ShaderManager->LoadShaders(
-	//	"Source/shaders/3.1.3.shadow_mapping.vs",
-	//	// "../../Utilities/shaders/fragmentShader.glsl");
-	//	// Comment out above line and uncomment below line (and vice versa) to use other frag shader
-	//	"Source/shaders/3.1.3.shadow_mapping.fs");
 	g_ShaderManager->use();
 
 	// Moved to outside 
@@ -111,10 +102,7 @@ int main(int argc, char* argv[])
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// Load shaders for depth map and debugging
-	//Shader simpleDepthShader("Source/shaders/depthVertexShader.glsl", "Source/shaders/depthFragShader.glsl");
-	//Shader debugDepthQuad("Source/shaders/debugQuadVertexShader.glsl", "Source/shaders/debugQuadFragShader.glsl");
-
+	// Load shader for depth map
 	g_DepthShaderManager->LoadShaders(
 		"Source/shaders/depthVertexShader.glsl",
 		"Source/shaders/depthFragShader.glsl");
@@ -181,14 +169,6 @@ int main(int argc, char* argv[])
 		// refresh the 3D scene
 		g_ShaderManager->use();
 		g_SceneManager->RenderScene("main");
-
-		// render Depth map to quad for visual debugging
-		// ---------------------------------------------
-		//debugDepthQuad.use();
-		//debugDepthQuad.setFloatValue("near_plane", near_plane);
-		//debugDepthQuad.setFloatValue("far_plane", far_plane);
-		//debugDepthQuad.setSampler2D("depthMap", depthMapID);
-		//g_SceneManager->renderQuad();
 
 		// Flips the the back buffer with the front buffer every frame.
 		glfwSwapBuffers(g_Window);
