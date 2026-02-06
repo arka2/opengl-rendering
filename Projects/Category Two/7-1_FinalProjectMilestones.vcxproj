@@ -13,21 +13,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\3DShapes\ShapeMeshes.cpp" />
     <ClCompile Include="..\..\Utilities\ShaderManager.cpp" />
-    <ClCompile Include="Source\Shader.cpp" />
-    <ClCompile Include="shadow_map_fbo.cpp" />
-    <ClCompile Include="Source\BoxAlbumTextures.cpp" />
-    <ClCompile Include="Source\BoxPuzzleTextures.cpp" />
-    <ClCompile Include="Source\HalfCylinder.cpp" />
     <ClCompile Include="Source\MainCode.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\ViewManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Shader.h" />
-    <ClInclude Include="shadow_map_fbo.h" />
-    <ClInclude Include="Source\BoxAlbumTextures.h" />
-    <ClInclude Include="Source\BoxPuzzleTextures.h" />
-    <ClInclude Include="Source\HalfCylinder.h" />
     <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\ViewManager.h" />
   </ItemGroup>
@@ -37,6 +27,7 @@
     <ProjectGuid>{fec5411d-16fc-4489-be83-8f69cd3c9837}</ProjectGuid>
     <RootNamespace>OpenGLSample</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Category Two</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
