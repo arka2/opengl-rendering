@@ -122,168 +122,6 @@ void ShapeMeshes::LoadBoxMesh()
 	}
 }
 
-void ShapeMeshes::LoadAlbumBoxMesh()
-{
-
-	// Position and Color data
-	GLfloat verts[] = {
-		//Positions				//Normals
-		// ------------------------------------------------------
-
-		//Back Face				//Negative Z Normal  Texture Coords. -- edited to use texture atlas
-		0.5f, 0.5f, -0.5f,		0.0f,  0.0f, -1.0f,  0.5f, 1.0f,   //0
-		0.5f, -0.5f, -0.5f,		0.0f,  0.0f, -1.0f,  0.5f, 0.0f,   //1
-		-0.5f, -0.5f, -0.5f,	0.0f,  0.0f, -1.0f,  1.0f, 0.0f,   //2
-		-0.5f, 0.5f, -0.5f,		0.0f,  0.0f, -1.0f,  1.0f, 1.0f,   //3
-
-		//Bottom Face			//Negative Y Normal
-		-0.5f, -0.5f, 0.5f,		0.0f, -1.0f,  0.0f,  0.5f, 1.0f,  //4
-		-0.5f, -0.5f, -0.5f,	0.0f, -1.0f,  0.0f,  0.5f, 0.0f,  //5
-		0.5f, -0.5f, -0.5f,		0.0f, -1.0f,  0.0f,  1.0f, 0.0f,  //6
-		0.5f, -0.5f,  0.5f,		0.0f, -1.0f,  0.0f,  1.0f, 1.0f,  //7
-
-		//Left Face				//Negative X Normal
-		-0.5f, 0.5f, -0.5f,		-1.0f,  0.0f,  0.0f,  0.5f, 1.0f,  //8
-		-0.5f, -0.5f,  -0.5f,	-1.0f,  0.0f,  0.0f,  0.5f, 0.0f,  //9
-		-0.5f,  -0.5f,  0.5f,	-1.0f,  0.0f,  0.0f,  1.0f, 0.0f,  //10
-		-0.5f,  0.5f,  0.5f,	-1.0f,  0.0f,  0.0f,  1.0f, 1.0f,  //11
-
-		//Right Face			//Positive X Normal
-		0.5f,  0.5f,  0.5f,		1.0f,  0.0f,  0.0f,  0.5f, 1.0f,  //12
-		0.5f,  -0.5f, 0.5f,		1.0f,  0.0f,  0.0f,  0.5f, 0.0f,  //13
-		0.5f, -0.5f, -0.5f,		1.0f,  0.0f,  0.0f,  1.0f, 0.0f,  //14
-		0.5f, 0.5f, -0.5f,		1.0f,  0.0f,  0.0f,  1.0f, 1.0f,  //15
-
-		//Top Face				//Positive Y Normal
-		-0.5f,  0.5f, -0.5f,	0.0f,  1.0f,  0.0f,  0.0f, 1.0f, //16
-		-0.5f,  0.5f, 0.5f,		0.0f,  1.0f,  0.0f,  0.0f, 0.0f, //17
-		0.5f,  0.5f,  0.5f,		0.0f,  1.0f,  0.0f,  0.5f, 0.0f, //18
-		0.5f,  0.5f,  -0.5f,	0.0f,  1.0f,  0.0f,  0.5f, 1.0f, //19
-
-		//Front Face			//Positive Z Normal
-		-0.5f, 0.5f,  0.5f,	    0.0f,  0.0f,  1.0f,  0.5f, 1.0f, //20
-		-0.5f, -0.5f,  0.5f,	0.0f,  0.0f,  1.0f,  0.5f, 0.0f, //21
-		0.5f,  -0.5f,  0.5f,	0.0f,  0.0f,  1.0f,  1.0f, 0.0f, //22
-		0.5f,  0.5f,  0.5f,		0.0f,  0.0f,  1.0f,  1.0f, 1.0f, //23
-	};
-
-	// Index data
-	GLuint indices[] = {
-		0,1,2,
-		0,3,2,
-		4,5,6,
-		4,7,6,
-		8,9,10,
-		8,11,10,
-		12,13,14,
-		12,15,14,
-		16,17,18,
-		16,19,18,
-		20,21,22,
-		20,23,22
-	};
-
-	m_AlbumBoxMesh.nVertices = sizeof(verts) / (sizeof(verts[0]) * (g_FloatsPerVertex + g_FloatsPerNormal + g_FloatsPerUV));
-	m_AlbumBoxMesh.nIndices = sizeof(indices) / sizeof(indices[0]);
-
-	glGenVertexArrays(1, &m_AlbumBoxMesh.vao); // we can also generate multiple VAOs or buffers at the same time
-	glBindVertexArray(m_AlbumBoxMesh.vao);
-
-	// Create 2 buffers: first one for the vertex data; second one for the indices
-	glGenBuffers(2, m_AlbumBoxMesh.vbos);
-	glBindBuffer(GL_ARRAY_BUFFER, m_AlbumBoxMesh.vbos[0]); // Activates the buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW); // Sends vertex or coordinate data to the GPU
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_AlbumBoxMesh.vbos[1]); // Activates the buffer
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	if (m_bMemoryLayoutDone == false)
-	{
-		SetShaderMemoryLayout();
-	}
-}
-
-void ShapeMeshes::LoadPuzzleBoxMesh()
-{
-
-	// Position and Color data
-	GLfloat verts[] = {
-		//Positions				//Normals
-		// ------------------------------------------------------
-
-		//Back Face				//Negative Z Normal  Texture Coords. -- edited to use texture atlas
-		0.5f, 0.5f, -0.5f,		0.0f,  0.0f, -1.0f,  0.5f, 1.0f,   //0
-		0.5f, -0.5f, -0.5f,		0.0f,  0.0f, -1.0f,  0.5f, 0.8145f,   //1
-		-0.5f, -0.5f, -0.5f,	0.0f,  0.0f, -1.0f,  1.0f, 0.8145f,   //2
-		-0.5f, 0.5f, -0.5f,		0.0f,  0.0f, -1.0f,  1.0f, 1.0f,   //3
-
-		//Bottom Face			//Negative Y Normal
-		-0.5f, -0.5f, 0.5f,		0.0f, -1.0f,  0.0f,  0.5f, 1.0f,  //4
-		-0.5f, -0.5f, -0.5f,	0.0f, -1.0f,  0.0f,  0.5f, 0.0f,  //5
-		0.5f, -0.5f, -0.5f,		0.0f, -1.0f,  0.0f,  1.0f, 0.0f,  //6
-		0.5f, -0.5f,  0.5f,		0.0f, -1.0f,  0.0f,  1.0f, 1.0f,  //7
-
-		//Left Face				//Negative X Normal
-		-0.5f, 0.5f, -0.5f,		-1.0f,  0.0f,  0.0f,  0.5f, 1.0f,  //8
-		-0.5f, -0.5f,  -0.5f,	-1.0f,  0.0f,  0.0f,  0.5f, 0.8145f,  //9
-		-0.5f,  -0.5f,  0.5f,	-1.0f,  0.0f,  0.0f,  1.0f, 0.8145f,  //10
-		-0.5f,  0.5f,  0.5f,	-1.0f,  0.0f,  0.0f,  1.0f, 1.0f,  //11
-
-		//Right Face			//Positive X Normal
-		0.5f,  0.5f,  0.5f,		1.0f,  0.0f,  0.0f,  0.5f, 1.0f,  //12
-		0.5f,  -0.5f, 0.5f,		1.0f,  0.0f,  0.0f,  0.5f, 0.8145f,  //13
-		0.5f, -0.5f, -0.5f,		1.0f,  0.0f,  0.0f,  1.0f, 0.8145f,  //14
-		0.5f, 0.5f, -0.5f,		1.0f,  0.0f,  0.0f,  1.0f, 1.0f,  //15
-
-		//Top Face				//Positive Y Normal
-		-0.5f,  0.5f, -0.5f,	0.0f,  1.0f,  0.0f,  0.0f, 1.0f, //16
-		-0.5f,  0.5f, 0.5f,		0.0f,  1.0f,  0.0f,  0.0f, 0.0f, //17
-		0.5f,  0.5f,  0.5f,		0.0f,  1.0f,  0.0f,  0.5f, 0.0f, //18
-		0.5f,  0.5f,  -0.5f,	0.0f,  1.0f,  0.0f,  0.5f, 1.0f, //19
-
-		//Front Face			//Positive Z Normal
-		-0.5f, 0.5f,  0.5f,	    0.0f,  0.0f,  1.0f,  0.5f, 1.0f, //20
-		-0.5f, -0.5f,  0.5f,	0.0f,  0.0f,  1.0f,  0.5f, 0.8145f, //21
-		0.5f,  -0.5f,  0.5f,	0.0f,  0.0f,  1.0f,  1.0f, 0.8145f, //22
-		0.5f,  0.5f,  0.5f,		0.0f,  0.0f,  1.0f,  1.0f, 1.0f, //23
-	};
-
-	// Index data
-	GLuint indices[] = {
-		0,1,2,
-		0,3,2,
-		4,5,6,
-		4,7,6,
-		8,9,10,
-		8,11,10,
-		12,13,14,
-		12,15,14,
-		16,17,18,
-		16,19,18,
-		20,21,22,
-		20,23,22
-	};
-
-	m_PuzzleBoxMesh.nVertices = sizeof(verts) / (sizeof(verts[0]) * (g_FloatsPerVertex + g_FloatsPerNormal + g_FloatsPerUV));
-	m_PuzzleBoxMesh.nIndices = sizeof(indices) / sizeof(indices[0]);
-
-	glGenVertexArrays(1, &m_PuzzleBoxMesh.vao); // we can also generate multiple VAOs or buffers at the same time
-	glBindVertexArray(m_PuzzleBoxMesh.vao);
-
-	// Create 2 buffers: first one for the vertex data; second one for the indices
-	glGenBuffers(2, m_PuzzleBoxMesh.vbos);
-	glBindBuffer(GL_ARRAY_BUFFER, m_PuzzleBoxMesh.vbos[0]); // Activates the buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW); // Sends vertex or coordinate data to the GPU
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_PuzzleBoxMesh.vbos[1]); // Activates the buffer
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	if (m_bMemoryLayoutDone == false)
-	{
-		SetShaderMemoryLayout();
-	}
-}
-
 ///////////////////////////////////////////////////
 //	LoadConeMesh()
 //
@@ -2362,36 +2200,6 @@ void ShapeMeshes::DrawBoxMesh()
 }
 
 ///////////////////////////////////////////////////
-//	DrawAlbumBoxMesh()
-//
-//	Transform and draw the plane mesh to the window.
-// 
-///////////////////////////////////////////////////
-void ShapeMeshes::DrawAlbumBoxMesh()
-{
-	glBindVertexArray(m_AlbumBoxMesh.vao);
-
-	glDrawElements(GL_TRIANGLES, m_AlbumBoxMesh.nIndices, GL_UNSIGNED_INT, (void*)0);
-
-	glBindVertexArray(0);
-}
-
-///////////////////////////////////////////////////
-//	DrawPuzzleBoxMesh()
-//
-//	Transform and draw the plane mesh to the window.
-// 
-///////////////////////////////////////////////////
-void ShapeMeshes::DrawPuzzleBoxMesh()
-{
-	glBindVertexArray(m_PuzzleBoxMesh.vao);
-
-	glDrawElements(GL_TRIANGLES, m_PuzzleBoxMesh.nIndices, GL_UNSIGNED_INT, (void*)0);
-
-	glBindVertexArray(0);
-}
-
-///////////////////////////////////////////////////
 //	DrawConeMesh()
 //
 //	Transform and draw the plane mesh to the window.
@@ -2420,8 +2228,7 @@ void ShapeMeshes::DrawConeMesh(
 void ShapeMeshes::DrawCylinderMesh(
 	bool bDrawTop,
 	bool bDrawBottom,
-	bool bDrawSides,
-	bool bDrawHalf)
+	bool bDrawSides)
 {
 	glBindVertexArray(m_CylinderMesh.vao);
 
@@ -2435,15 +2242,7 @@ void ShapeMeshes::DrawCylinderMesh(
 	}
 	if (bDrawSides == true)
 	{
-		if (bDrawHalf == false)
-		{
-			glDrawArrays(GL_TRIANGLE_STRIP, 72, 146);	//sides
-		}
-		else
-		{
-			glDrawArrays(GL_TRIANGLE_STRIP, 72, 72);	//sides
-		}
-		
+		glDrawArrays(GL_TRIANGLE_STRIP, 72, 146);	//sides
 	}
 
 	glBindVertexArray(0);

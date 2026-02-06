@@ -39,6 +39,9 @@ namespace
 	// the following variable is false when orthographic projection
 	// is off and true when it is on
 	bool bOrthographicProjection = false;
+
+	bool blinn = false;
+	bool blinnKeyPressed = false;
 }
 
 /***********************************************************
@@ -243,6 +246,19 @@ void ViewManager::ProcessKeyboardEvents()
 		g_pCamera->Position = glm::vec3(0.0f, 5.0f, 12.0f);
 		g_pCamera->Front = glm::vec3(0.0f, -0.5f, -2.0f);
 		g_pCamera->Up = glm::vec3(0.0f, 1.0f, 0.0f);
+	}
+
+	if (glfwGetKey(m_pWindow, GLFW_KEY_B) == GLFW_PRESS && !blinnKeyPressed)
+	{
+		blinn = !blinn;
+		m_pShaderManager->setBoolValue("blinn", blinn);
+		blinnKeyPressed = true;
+		std::cout << "b pressed" << std::endl;
+
+	}
+	if (glfwGetKey(m_pWindow, GLFW_KEY_B) == GLFW_RELEASE)
+	{
+		blinnKeyPressed = false;
 	}
 }
 

@@ -16,6 +16,7 @@
 #endif
 
 #include <glm/gtx/transform.hpp>
+#include "Shader.h"
 
 // declaration of global variables
 namespace
@@ -37,6 +38,12 @@ SceneManager::SceneManager(ShaderManager *pShaderManager, ShaderManager* pDepthS
 	m_pShaderManager = pShaderManager;
 	m_pDepthShaderManager = pDepthShaderManager;
 	m_basicMeshes = new ShapeMeshes();
+	// Added for using half cylinder without editing ShapeMeshes
+	m_halfCylinder = new HalfCylinder();
+	// Added for using box with multiple textures
+	m_boxAlbumTextures = new BoxAlbumTextures();
+	// Added for using box with puzzle textures
+	m_boxPuzzleTextures = new BoxPuzzleTextures();
 }
 
 /***********************************************************
@@ -50,6 +57,9 @@ SceneManager::~SceneManager()
 	m_pDepthShaderManager = NULL;
 	delete m_basicMeshes;
 	m_basicMeshes = NULL;
+	// Added for using half cylinder without editing ShapeMeshes
+	delete m_halfCylinder;
+	m_halfCylinder = NULL;
 }
 
 /***********************************************************
@@ -160,6 +170,8 @@ void SceneManager::BindGLTextures()
 		// bind textures on corresponding texture units
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, m_textureIDs[i].ID);
+		//std::cout << m_textureIDs[i].ID << std::endl;
+		//std::cout << m_textureIDs[i].tag << std::endl;
 	}
 }
 
@@ -580,12 +592,17 @@ void SceneManager::PrepareScene()
 
 	m_basicMeshes->LoadPlaneMesh();
 	m_basicMeshes->LoadBoxMesh();
-	m_basicMeshes->LoadAlbumBoxMesh();
-	m_basicMeshes->LoadPuzzleBoxMesh();
 	m_basicMeshes->LoadCylinderMesh();
 	m_basicMeshes->LoadTorusMesh();
 	m_basicMeshes->LoadSphereMesh();
 	m_basicMeshes->LoadTaperedCylinderMesh();
+	// Added for using half cylinder without editing ShapeMeshes
+	m_halfCylinder->LoadCylinderMesh();
+	// Added for using box mesh with multiple textures
+	m_boxAlbumTextures->LoadBoxMesh();
+	// Added for using box mesh with multiple textures
+	m_boxPuzzleTextures->LoadBoxMesh();
+
 }
 
 /***********************************************************
@@ -701,7 +718,7 @@ void SceneManager::RenderAlbum(std::string shaderName)
 	SetShaderTexture("album_back");
 
 	// draw the mesh with transformation values
-	m_basicMeshes->DrawCylinderMesh(false, false, true, true);
+	m_halfCylinder->DrawHalfCylinderMesh(false, false, true);
 	/****************************************************************/
 
 	/****************************************************************/
@@ -738,7 +755,7 @@ void SceneManager::RenderAlbum(std::string shaderName)
 	SetShaderTexture("album_back");
 
 	// draw the mesh with transformation values
-	m_basicMeshes->DrawCylinderMesh(false, false, true, true);
+	m_halfCylinder->DrawHalfCylinderMesh(false, false, true);
 	/****************************************************************/
 
 	/****************************************************************/
@@ -882,7 +899,7 @@ void SceneManager::RenderAlbum(std::string shaderName)
 	SetShaderTexture("album");
 
 	// draw the mesh with transformation values
-	m_basicMeshes->DrawAlbumBoxMesh();
+	m_boxAlbumTextures->DrawBoxMesh();
 	/****************************************************************/
 
 	/****************************************************************/
@@ -1007,7 +1024,7 @@ void SceneManager::RenderPuzzleBox(std::string shaderName)
 	SetShaderTexture("puzzle");
 
 	// draw the mesh with transformation values
-	m_basicMeshes->DrawPuzzleBoxMesh();
+	m_boxPuzzleTextures->DrawBoxMesh();
 }
 
 /***********************************************************
@@ -1143,7 +1160,7 @@ void SceneManager::RenderBottle(std::string shaderName)
 	SetShaderMaterial("glass");
 
 	// draw the mesh with transformation values
-	m_basicMeshes->DrawCylinderMesh(false, false, true, false);
+	m_basicMeshes->DrawCylinderMesh(false, false, true);
 	/****************************************************************/
 
 	/****************************************************************/
